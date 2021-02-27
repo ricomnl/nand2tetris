@@ -1,6 +1,6 @@
-use assembler::Parser;
-use assembler::Command;
 use assembler::Code;
+use assembler::Command;
+use assembler::Parser;
 use assembler::SymbolTable;
 use std::collections::HashMap;
 
@@ -85,7 +85,6 @@ const INPUT_WITH_SYMBOLS2: &str = r#"// This file is part of www.nand2tetris.org
    0;JMP
 "#;
 
-
 #[test]
 fn test_init_parser() {
     let stripped_input1 = r#"@2
@@ -95,7 +94,7 @@ D=D+A
 @0
 M=D
 "#;
-	let parser = Parser::new(INPUT_WITHOUT_SYMBOLS);
+    let parser = Parser::new(INPUT_WITHOUT_SYMBOLS);
     assert_eq!(stripped_input1, parser.to_string());
 }
 
@@ -106,11 +105,26 @@ fn test_command_parser() {
     let c_command_2 = "D=D+A";
     let c_command_3 = "D;JGT";
     let l_command_1 = "(LOOP)";
-    assert_eq!(Command::ACommand, assembler::command_type(a_command_1).unwrap());
-    assert_eq!(Command::CCommand, assembler::command_type(c_command_1).unwrap());
-    assert_eq!(Command::CCommand, assembler::command_type(c_command_2).unwrap());
-    assert_eq!(Command::CCommand, assembler::command_type(c_command_3).unwrap());
-    assert_eq!(Command::LCommand, assembler::command_type(l_command_1).unwrap());
+    assert_eq!(
+        Command::ACommand,
+        assembler::command_type(a_command_1).unwrap()
+    );
+    assert_eq!(
+        Command::CCommand,
+        assembler::command_type(c_command_1).unwrap()
+    );
+    assert_eq!(
+        Command::CCommand,
+        assembler::command_type(c_command_2).unwrap()
+    );
+    assert_eq!(
+        Command::CCommand,
+        assembler::command_type(c_command_3).unwrap()
+    );
+    assert_eq!(
+        Command::LCommand,
+        assembler::command_type(l_command_1).unwrap()
+    );
 }
 
 #[test]
@@ -155,7 +169,10 @@ fn test_valid_address() {
     let address_1 = "@2".to_string();
     let mut address_parser = SymbolTable::new();
     let symbol = SymbolTable::parse_symbol(address_1, Command::ACommand).unwrap();
-    assert_eq!("0000000000000010", address_parser.get_address(&symbol).unwrap());
+    assert_eq!(
+        "0000000000000010",
+        address_parser.get_address(&symbol).unwrap()
+    );
 }
 
 #[test]
@@ -163,13 +180,15 @@ fn test_valid_long_address() {
     let address_1 = "@16000".to_string();
     let mut address_parser = SymbolTable::new();
     let symbol = SymbolTable::parse_symbol(address_1, Command::ACommand).unwrap();
-    assert_eq!("0011111010000000", address_parser.get_address(&symbol).unwrap());
+    assert_eq!(
+        "0011111010000000",
+        address_parser.get_address(&symbol).unwrap()
+    );
 }
 
 #[test]
 fn test_valid_address_with_dot() {
     let address_1 = "@sys.init".to_string();
-    let mut address_parser = SymbolTable::new();
     let symbol = SymbolTable::parse_symbol(address_1, Command::ACommand).unwrap();
     assert_eq!("sys.init", symbol);
 }
@@ -177,7 +196,7 @@ fn test_valid_address_with_dot() {
 #[test]
 #[should_panic]
 fn test_invalid_address_no_int() {
-	let invalid_address = "@".to_string();
+    let invalid_address = "@".to_string();
     let mut address_parser = SymbolTable::new();
     let symbol = SymbolTable::parse_symbol(invalid_address, Command::ACommand).unwrap();
     address_parser.get_address(&symbol).unwrap();
@@ -186,7 +205,7 @@ fn test_invalid_address_no_int() {
 #[test]
 #[should_panic]
 fn test_invalid_address_neg_int() {
-	let invalid_address = "@-1".to_string();
+    let invalid_address = "@-1".to_string();
     let mut address_parser = SymbolTable::new();
     let symbol = SymbolTable::parse_symbol(invalid_address, Command::ACommand).unwrap();
     address_parser.get_address(&symbol).unwrap();
@@ -195,66 +214,74 @@ fn test_invalid_address_neg_int() {
 #[test]
 fn test_valid_symbol() {
     let symbol = "(LOOP)".to_string();
-    let symbol_parser = SymbolTable::new();
-    assert_eq!("LOOP", SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap());
+    assert_eq!(
+        "LOOP",
+        SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap()
+    );
 }
 
 #[test]
 fn test_valid_symbol_with_dot() {
     let symbol = "(ball.new)".to_string();
-    let symbol_parser = SymbolTable::new();
-    assert_eq!("ball.new", SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap());
+    assert_eq!(
+        "ball.new",
+        SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap()
+    );
 }
 
 #[test]
 fn test_valid_symbol_with_dot_and_dollar() {
     let symbol = "(ball.setdestination$if_true0)".to_string();
-    let symbol_parser = SymbolTable::new();
-    assert_eq!("ball.setdestination$if_true0", SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap());
+    assert_eq!(
+        "ball.setdestination$if_true0",
+        SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap()
+    );
 }
 
 #[test]
 #[should_panic]
 fn test_invalid_symbol_no_parentheses() {
     let symbol = "LOOP".to_string();
-    let symbol_parser = SymbolTable::new();
     SymbolTable::parse_symbol(symbol, Command::LCommand).unwrap();
 }
 
 #[test]
 fn test_fill_symbol_table() {
     let test_symbol_map: HashMap<String, u32> = [
-			 (String::from("SP")     , 0),
-		     (String::from("LCL")    , 1),
-		     (String::from("ARG")    , 2),
-		     (String::from("THIS")   , 3),
-		     (String::from("THAT")   , 4),
-		     (String::from("R0")     , 0),
-		     (String::from("R1")     , 1),
-		     (String::from("R2")     , 2),
-		     (String::from("R3")     , 3),
-		     (String::from("R4")     , 4),
-		     (String::from("R5")     , 5),
-		     (String::from("R6")     , 6),
-		     (String::from("R7")     , 7),
-		     (String::from("R8")     , 8),
-		     (String::from("R9")     , 9),
-		     (String::from("R10")    , 10),
-		     (String::from("R11")    , 11),
-		     (String::from("R12")    , 12),
-		     (String::from("R13")    , 13),
-		     (String::from("R14")    , 14),
-		     (String::from("R15")    , 15),
-		     (String::from("OUTPUT_FIRST")  , 10),
-		     (String::from("OUTPUT_D")      , 12),
-		     (String::from("INFINITE_LOOP") , 14),
-		     (String::from("SCREEN") , 16384),
-		     (String::from("KBD")    , 24576)].iter().cloned().collect();
-	let mut parser = Parser::new(INPUT_WITH_SYMBOLS);
-	parser.fill_symbol_table().unwrap();
+        (String::from("SP"), 0),
+        (String::from("LCL"), 1),
+        (String::from("ARG"), 2),
+        (String::from("THIS"), 3),
+        (String::from("THAT"), 4),
+        (String::from("R0"), 0),
+        (String::from("R1"), 1),
+        (String::from("R2"), 2),
+        (String::from("R3"), 3),
+        (String::from("R4"), 4),
+        (String::from("R5"), 5),
+        (String::from("R6"), 6),
+        (String::from("R7"), 7),
+        (String::from("R8"), 8),
+        (String::from("R9"), 9),
+        (String::from("R10"), 10),
+        (String::from("R11"), 11),
+        (String::from("R12"), 12),
+        (String::from("R13"), 13),
+        (String::from("R14"), 14),
+        (String::from("R15"), 15),
+        (String::from("OUTPUT_FIRST"), 10),
+        (String::from("OUTPUT_D"), 12),
+        (String::from("INFINITE_LOOP"), 14),
+        (String::from("SCREEN"), 16384),
+        (String::from("KBD"), 24576),
+    ]
+    .iter()
+    .cloned()
+    .collect();
+    let mut parser = Parser::new(INPUT_WITH_SYMBOLS);
+    parser.fill_symbol_table().unwrap();
     assert_eq!(test_symbol_map, *parser.symbol_table().symbol_map());
 }
-
 
 #[test]
 fn test_assembler_without_symbols() {
@@ -265,7 +292,7 @@ fn test_assembler_without_symbols() {
 0000000000000000
 1110001100001000
 "#;
-	let mut parser = Parser::new(INPUT_WITHOUT_SYMBOLS);
+    let mut parser = Parser::new(INPUT_WITHOUT_SYMBOLS);
     assert_eq!(assembler_output, parser.to_bytes().unwrap());
 }
 
@@ -288,7 +315,7 @@ fn test_assembler_with_symbols_max() {
 0000000000001110
 1110101010000111
 "#;
-	let mut parser = Parser::new(INPUT_WITH_SYMBOLS);
+    let mut parser = Parser::new(INPUT_WITH_SYMBOLS);
     assert_eq!(assembler_output, parser.to_bytes().unwrap());
 }
 
@@ -320,7 +347,6 @@ fn test_assembler_with_symbols_rect() {
 0000000000010111
 1110101010000111
 "#;
-	let mut parser = Parser::new(INPUT_WITH_SYMBOLS2);
+    let mut parser = Parser::new(INPUT_WITH_SYMBOLS2);
     assert_eq!(assembler_output, parser.to_bytes().unwrap());
 }
-
