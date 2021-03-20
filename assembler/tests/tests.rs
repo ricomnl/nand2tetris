@@ -2,6 +2,7 @@ use assembler::Code;
 use assembler::Command;
 use assembler::Parser;
 use assembler::SymbolTable;
+use assembler::command_type;
 use std::collections::HashMap;
 
 const INPUT_WITHOUT_SYMBOLS: &str = r#"// This file is part of www.nand2tetris.org
@@ -107,23 +108,23 @@ fn test_command_parser() {
     let l_command_1 = "(LOOP)";
     assert_eq!(
         Command::ACommand,
-        assembler::command_type(a_command_1).unwrap()
+        command_type(a_command_1).unwrap()
     );
     assert_eq!(
         Command::CCommand,
-        assembler::command_type(c_command_1).unwrap()
+        command_type(c_command_1).unwrap()
     );
     assert_eq!(
         Command::CCommand,
-        assembler::command_type(c_command_2).unwrap()
+        command_type(c_command_2).unwrap()
     );
     assert_eq!(
         Command::CCommand,
-        assembler::command_type(c_command_3).unwrap()
+        command_type(c_command_3).unwrap()
     );
     assert_eq!(
         Command::LCommand,
-        assembler::command_type(l_command_1).unwrap()
+        command_type(l_command_1).unwrap()
     );
 }
 
