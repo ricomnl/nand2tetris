@@ -11,8 +11,8 @@ D=A
 @0
 M=D
 
-// Push 7 onto the stack and increase SP by 1
-@7
+// Push 8 onto the stack and increase SP by 1
+@8
 D=A // store the value temporarily
 @0
 A=M // set the address to the SP address
@@ -21,14 +21,14 @@ M=D // set the value at M[address] to temporarily stored value
 @0 
 M=M+1
 
-@8
-D=A
-@0
-A=M
-M=D
+//@7
+//D=A
+//@0
+//A=M
+//M=D
 // increase stack pointer
-@0
-M=M+1
+//@0
+//M=M+1
 
 // Get the element on top of the stack and store it temporarily
 @0
@@ -39,7 +39,7 @@ D=M // temporarily store the element at M[address]
 @0 
 M=M-1 // set the SP to the second element from the top
 A=M
-D=D+M // (+|-|eq|gt|lt|and|or) add the topmost element to the second element from the top at M[address]
+D=-D // (+|-|eq|gt|lt|and|or) add the topmost element to the second element from the top at M[address]
 
 @0
 A=M
