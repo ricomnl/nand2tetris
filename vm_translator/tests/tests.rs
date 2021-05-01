@@ -34,48 +34,48 @@ fn test_command_parser() {
     let c_arithmetic_1 = "add";
     let c_push_1 = "push constant 7";
     let c_pop_1 = "pop this 6";
-    // let c_label_1 = "";
-    // let c_goto_1 = "";
-    // let c_if_1 = "";
-    // let c_function_1 = "";
-    // let c_return_1 = "";
-    // let c_call_1 = "";
+    let c_label_1 = "label LOOP_START";
+    let c_goto_1 = "goto END_PROGRAM";
+    let c_if_1 = "if-goto LOOP_START";
+    let c_function_1 = "function SimpleFunction.test 2";
+    let c_return_1 = "return";
+    let c_call_1 = "call Main.fibonacci 1";
     assert_eq!(
         Command::ARITHMETIC,
         Parser::command_type(c_arithmetic_1).unwrap()
     );
     assert_eq!(
-        Command::PUSH_POP,
+        Command::PUSHPOP,
         Parser::command_type(c_push_1).unwrap()
     );
     assert_eq!(
-        Command::PUSH_POP,
+        Command::PUSHPOP,
         Parser::command_type(c_pop_1).unwrap()
     );
-    // assert_eq!(
-    //     Command::LABEL,
-    //     command_type(c_label_1).unwrap()
-    // );
-    // assert_eq!(
-    //     Command::GOTO,
-    //     command_type(c_goto_1).unwrap()
-    // );
-    // assert_eq!(
-    //     Command::IF,
-    //     command_type(c_if_1).unwrap()
-    // );
-    // assert_eq!(
-    //     Command::FUNCTION,
-    //     command_type(c_function_1).unwrap()
-    // );
-    // assert_eq!(
-    //     Command::RETURN,
-    //     command_type(c_return_1).unwrap()
-    // );
-    // assert_eq!(
-    //     Command::CALL,
-    //     command_type(c_call_1).unwrap()
-    // );
+    assert_eq!(
+        Command::LABEL,
+        Parser::command_type(c_label_1).unwrap()
+    );
+    assert_eq!(
+        Command::GOTO,
+        Parser::command_type(c_goto_1).unwrap()
+    );
+    assert_eq!(
+        Command::IF,
+        Parser::command_type(c_if_1).unwrap()
+    );
+    assert_eq!(
+        Command::FUNCTION,
+        Parser::command_type(c_function_1).unwrap()
+    );
+    assert_eq!(
+        Command::RETURN,
+        Parser::command_type(c_return_1).unwrap()
+    );
+    assert_eq!(
+        Command::CALL,
+        Parser::command_type(c_call_1).unwrap()
+    );
 }
 
 #[test]
